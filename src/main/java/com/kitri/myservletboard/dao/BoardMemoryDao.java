@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 public class BoardMemoryDao implements BoardDao{
-
     private static final BoardMemoryDao instance = new BoardMemoryDao();
 
     public static BoardMemoryDao getInstance(){
@@ -49,8 +48,36 @@ public class BoardMemoryDao implements BoardDao{
         return memoryBoardDB.stream().filter(board -> Objects.equals(board.getId(), id)).findFirst().get();
     }
 
+
+//    static long id=10;
     @Override
     public void save(Board board) {
+//        if(board.getId() == null)
+//            board.setId(++id);
+        if(board.getId() == null) {
+//            int i;
+//            boolean check = true;
+            int id2=0;
+            boolean flag = false;
+            while(!flag) {
+                flag = true;
+                id2++;
+                for (Board b : memoryBoardDB) {
+                    if (id2 == b.getId()) {
+                        flag = false;
+                        break;
+                    }
+                }
+            }
+//            for (i = 0; i <= memoryBoardDB.size() - 1; i++) {
+//                if (memoryBoardDB.get(i).getId() != i + 1) {
+//                    board.setId(i + 1L);
+//                    check = false;
+//                }
+//            }
+//            if (check) board.setId((long) ++i);
+            board.setId((long) id2);
+        }
         memoryBoardDB.add(board);
     }
 

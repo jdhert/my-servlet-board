@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @WebServlet("/board/*")
@@ -21,6 +22,7 @@ public class BoardController extends HttpServlet {
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
+        request.setCharacterEncoding("UTF-8");
         PrintWriter out = response.getWriter();
         out.println("<h1> 요청을 잘 응답 받았습니다</h1>");
         //URL을 파싱해서 어떤 요청인지 파악
@@ -57,6 +59,10 @@ public class BoardController extends HttpServlet {
         } else if (command.equals("/board/create")) {
             // 요청: 게시글 등록하게 게시판 이렇게 좀 만들어 주라는 뜻
             // 응답: by 리다이렉트 or 포워드
+            boardService.addBoard(new Board(null, request.getParameter("title"),request.getParameter("content"),
+                    request.getParameter("writer"), LocalDateTime.now(), 0, 0));
+            response.sendRedirect("/board/list");
+            return;
         } else if (command.equals("/board/updateForm")) {
             // 요청: 게시글 등록하게 게시판 이렇게 좀 만들어 주라는 뜻
             // 응답: by 리다이렉트 or 포워드
