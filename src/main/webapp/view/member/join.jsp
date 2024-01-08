@@ -102,9 +102,9 @@
     <a class="logo" href="/board/list"><img src="https://poiemaweb.com/img/logo.png"></a>
     <nav>
         <ul class="nav-items">
-            <li><a href="/view/board/list.jsp">게시글목록</a></li>
-            <li><a href="/view/board/createForm.jsp">게시글등록</a></li>
-            <li><a href="/view/board/updateForm.jsp">게시글수정</a></li>
+            <li><a href="/board/list">게시글목록</a></li>
+            <li><a href="/board/createForm">게시글등록</a></li>
+            <li><a href="/board/updateForm">게시글수정</a></li>
             <li><a href="join.jsp">회원가입</a></li>
             <li><a href="registration.jsp">회원정보수정</a></li>
             <li><a href="login.jsp">로그인</a></li>
