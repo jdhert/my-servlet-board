@@ -46,7 +46,6 @@ public class BoardController extends HttpServlet {
             //사실상 이 SendRedirect나 바로 아래 addHeader나 동일해서 하나만 써줘도 됨
 //            response.addHeader("Refresh", "2; url = " + "view");
             ArrayList<Board> boards = boardService.getBoards();
-            //????????????????
             request.setAttribute("boards", boards);
             view += "list.jsp";
         } else if (command.equals("/board/createForm")) {
@@ -70,6 +69,11 @@ public class BoardController extends HttpServlet {
         } else if (command.equals("/board/delete/게시판번호")) {
             // 요청: 이 번호의 게시판 삭제해주라는 뜻
             // 응답: by 리다이렉트 or 포워드
+        } else if (command.equals("/board/detail")) {
+            // /board/detail?id=1
+            Board board = boardService.getBoard(Long.valueOf(request.getParameter("id")));
+            request.setAttribute("board", board);
+            view += "detail.jsp";
         }
 
         RequestDispatcher dispatcher = request.getRequestDispatcher(view);

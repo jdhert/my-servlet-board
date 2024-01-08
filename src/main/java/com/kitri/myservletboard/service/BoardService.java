@@ -18,6 +18,10 @@ public class BoardService {
     public ArrayList<Board> getBoards(){
         return boardDao.getAll();
     }
+
+    public Board getBoard(Long id){
+        return boardDao.getById(id);
+    }
     public void addBoard(Board board){
         boardDao.save(board);
     }

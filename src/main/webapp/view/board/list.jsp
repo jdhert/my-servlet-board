@@ -115,17 +115,18 @@
         <% for(int i=0; i <= boards.size()-1; i++){%>
           <tr>
             <th scope="row"><%=i+1%></th>
-            <td><%= boards.get(i).getTitle()%></td>
+            <td><a href="/board/detail?id=<%=boards.get(i).getId()%>" style="color: black; text-decoration: none">
+              <%=boards.get(i).getTitle()%></a></td>
             <td><%=boards.get(i).getWriter()%></td>
             <td><%=boards.get(i).getCreatedAt()%></td>
             <td><%=boards.get(i).getViewCount()%></td>
-            <td><%=boards.get(i).getViewCount()%></td>
+            <td><%=boards.get(i).getCommentCount()%></td>
           </tr>
         <% } %>
         </tbody>
       </table>
       <div>
-        <a href="createForm.jsp" role="button" class="btn btn-outline-dark">글쓰기</a>
+        <a href="/board/createForm" role="button" class="btn btn-outline-dark">글쓰기</a>
       </div>
       <div class="d-flex justify-content-center">
       <nav aria-label="Page navigation example">
