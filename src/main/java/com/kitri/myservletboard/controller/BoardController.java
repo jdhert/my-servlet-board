@@ -68,13 +68,23 @@ public class BoardController extends HttpServlet {
             // 응답: by 리다이렉트 or 포워드
             //1.리다이렉트 방식
 //            response.sendRedirect("/view/board/updateForm.jsp");
+            Board board = boardService.getBoard(Long.valueOf(request.getParameter("id")));
+            request.setAttribute("board", board);
             view += "updateForm.jsp";
-        } else if (command.equals("/board/update/게시판번호")) {
+        } else if (command.equals("/board/update")) {
             // 요청: 이 번호의 게시판 이렇게 수정해주라는 뜻
             // 응답: by 리다이렉트 or 포워드
-        } else if (command.equals("/board/delete/게시판번호")) {
+            boardService.updateBoard((new Board(Long.parseLong(request.getParameter("id")), request.getParameter("title"),request.getParameter("content"),
+                    request.getParameter("writer"), LocalDateTime.now(),0, 0)));
+            response.sendRedirect("/board/list");
+            return;
+        } else if (command.equals("/board/delete")) {
             // 요청: 이 번호의 게시판 삭제해주라는 뜻
             // 응답: by 리다이렉트 or 포워드
+            Board board = boardService.getBoard(Long.valueOf(request.getParameter("id")));
+            boardService.deleteBoard(board);
+            response.sendRedirect("/board/list");
+            return;
         } else if (command.equals("/board/detail")) {
             // /board/detail?id=1
             Board board = boardService.getBoard(Long.valueOf(request.getParameter("id")));
