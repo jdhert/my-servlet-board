@@ -1,9 +1,20 @@
 <%@ page import="java.util.ArrayList" %>
 <%@ page import="com.kitri.myservletboard.data.Board" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
+<%@ page import="com.kitri.myservletboard.data.Pagination" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
   ArrayList<Board> boards = (ArrayList<Board>) request.getAttribute("boards");
+  Pagination pagination = (Pagination) request.getAttribute("pagination");
+//  pagination.setStartIndex(((pagination.getCurrentPage()-1)/ pagination.getPagesOnScreen()) * pagination.getPagesOnScreen());
+//  int m = 0;
+//  int k = pagination.getStartIndex();
+//  if(pagination.getCurrentPage() == ((pagination.getTotalRecords()/pagination.getRecordsPerPage()) +
+//          ((pagination.getTotalRecords() % pagination.getRecordsPerPage() > 0) ? 1 : 0)))
+//      m = 1;
+//  if(pagination.getStartIndex() == 0)
+//    k = 1;
+  pagination.calcPagination();
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -35,7 +46,7 @@
         <tbody class="table-group-divider">
         <% for(int i=0; i <= boards.size()-1; i++){%>
           <tr>
-            <th scope="row"><%=i+1%></th>
+            <th scope="row"><%=(pagination.getCurrentPage()-1) * pagination.getRecordsPerPage() + i + 1 %></th>
             <td><a href="/board/detail?id=<%=boards.get(i).getId()%>" style="color: black; text-decoration: none">
               <%=boards.get(i).getTitle()%></a></td>
             <td><%=boards.get(i).getWriter()%></td>
@@ -49,21 +60,40 @@
       <div>
         <a href="/board/createForm" role="button" class="btn btn-outline-dark">글쓰기</a>
       </div>
+
       <div class="d-flex justify-content-center">
       <nav aria-label="Page navigation example">
         <ul class="pagination pagination-sm">
-          <li class="page-item disabled">
-            <a class="page-link" href="#" tabindex="-1" aria-disabled="true">Previous</a>
-          </li>
-          <li class="page-item"><a class="page-link" href="#">1</a></li>
-          <li class="page-item"><a class="page-link" href="#">2</a></li>
-          <li class="page-item"><a class="page-link" href="#">3</a></li>
+          <% if(pagination.isHasPrev()) {%>
           <li class="page-item">
-            <a class="page-link" href="#">Next</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%>">Previous</a>
           </li>
+          <% }  else {%>
+          <li class="page-item disabled">
+            <a class="page-link" href="#">Previous</a>
+          </li>
+          <% } %>
+          <%
+            for(int i = pagination.getStartPageOnScreen(); i <= pagination.getEndPageOnScreen(); i++) {
+              if(pagination.getCurrentPage() == i ) {
+          %>
+          <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%>"><%=i%></a></li>
+          <%} else {%>
+          <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%>"><%=i%></a></li>
+          <%}}%>
+          <% if(pagination.isHasNext()) {%>
+          <li class="page-item">
+            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>" >Next</a>
+          </li>
+          <% }  else {%>
+          <li class="page-item disabled">
+            <a class="page-link" href="#"  aria-disabled="true">Next</a>
+          </li>
+          <% }%>
         </ul>
       </nav>
     </div>
+
     </div>
   </div>
 

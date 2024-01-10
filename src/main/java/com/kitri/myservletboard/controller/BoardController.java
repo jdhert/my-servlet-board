@@ -2,6 +2,7 @@ package com.kitri.myservletboard.controller;
 
 
 import com.kitri.myservletboard.data.Board;
+import com.kitri.myservletboard.data.Pagination;
 import com.kitri.myservletboard.service.BoardService;
 
 import javax.servlet.RequestDispatcher;
@@ -41,13 +42,22 @@ public class BoardController extends HttpServlet {
         String view = "/view/board/";
 
         if (command.equals("/board/list")) {
+
             // 요청: 조회 게시글 리스트 좀 보여주라는 뜻
             // 응답: 그러면 우리는 게시글 리스트 패이지로 응답해줘야 한다. by 리다이렉트 or 포워드
             //1.리다이렉트 방식
 //            response.sendRedirect("/view/board/list.jsp");
             //사실상 이 SendRedirect나 바로 아래 addHeader나 동일해서 하나만 써줘도 됨
 //            response.addHeader("Refresh", "2; url = " + "view");
-            ArrayList<Board> boards = boardService.getBoards();
+            ArrayList<Board> boards = null;
+            Pagination pagination = new Pagination(1);
+            String page = request.getParameter("page");
+            if (page != null) pagination.setCurrentPage(Integer.parseInt(page));
+
+            boards = boardService.getBoards(pagination);
+//            pagination.setTotalRecords(boardService.getBoards().size()));
+
+            request.setAttribute("pagination", pagination);
             request.setAttribute("boards", boards);
             view += "list.jsp";
         } else if (command.equals("/board/createForm")) {
