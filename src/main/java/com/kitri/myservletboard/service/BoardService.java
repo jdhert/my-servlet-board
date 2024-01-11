@@ -23,8 +23,15 @@ public class BoardService {
         return boardDao.getAll();
     }
     public ArrayList<Board> getBoards(Pagination pagination){
-        pagination.setTotalRecords(boardDao.count());
-        return boardDao.getAll(pagination);
+        //if(pagination.getTerm().equals("all")) {
+            if (pagination.getKeyword() == null) {
+                pagination.setTotalRecords(boardDao.count());
+                return boardDao.getAll(pagination);
+            } else {
+                pagination.setTotalRecords(boardDao.count(pagination));
+                return boardDao.getConc(pagination);
+            }
+        //}
     }
     public Board getBoard(Long id){
         return boardDao.getById(id);

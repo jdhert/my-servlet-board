@@ -12,6 +12,25 @@ public class Pagination {
 
     private int totalRecords = 0;
 
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public String getKeyword() {
+        return keyword;
+    }
+
+    public void setKeyword(String keyword) {
+        this.keyword = keyword;
+    }
+
+    private String type;
+    private String keyword;
+
     private boolean hasNext = false;
 
     public boolean isHasNext() {
@@ -52,7 +71,34 @@ public class Pagination {
 
     private int endPageOnScreen = this.pagesOnScreen;
 
+    private String term;
 
+    public String getTerm() {
+        return term;
+    }
+
+    public void setTerm(String term) {
+        this.term = term;
+    }
+
+    public void datePagination(){
+        switch (this.term){
+            case "all":
+                break;
+            case "day":
+                break;
+                case "week":
+                break;
+                case "month":
+                break;
+                case "half_mon":
+                break;
+                case "year":
+                break;
+            default:
+                break;
+        }
+    }
     public void calcPagination(){
         int totalPages = (int) Math.ceil((double) this.totalRecords / this.recordsPerPage);
         this.startPageOnScreen =  ((int)(Math.ceil((double) this.currentPage / this.pagesOnScreen) - 1) * this.pagesOnScreen + 1);

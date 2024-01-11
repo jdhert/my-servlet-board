@@ -105,4 +105,15 @@ public class BoardMemoryDao implements BoardDao{
     public int count() {
         return 0;
     }
+
+    @Override
+    public int count(Pagination pagination) {
+        return 0;
+    }
+
+    @Override
+    public ArrayList<Board> getConc(Pagination pagination) {
+        return null;
+    }
+
 }

@@ -49,14 +49,20 @@ public class BoardController extends HttpServlet {
 //            response.sendRedirect("/view/board/list.jsp");
             //사실상 이 SendRedirect나 바로 아래 addHeader나 동일해서 하나만 써줘도 됨
 //            response.addHeader("Refresh", "2; url = " + "view");
-            ArrayList<Board> boards = null;
+            ArrayList<Board> boards;
             Pagination pagination = new Pagination(1);
             String page = request.getParameter("page");
+            String type = request.getParameter("type");
+            String keyword = request.getParameter("keyword");
+            String  term = request.getParameter("term");
+
             if (page != null) pagination.setCurrentPage(Integer.parseInt(page));
-
+            if(keyword != null) {
+                pagination.setType(type);
+                pagination.setKeyword(keyword);
+            }
+            pagination.setTerm(term);
             boards = boardService.getBoards(pagination);
-//            pagination.setTotalRecords(boardService.getBoards().size()));
-
             request.setAttribute("pagination", pagination);
             request.setAttribute("boards", boards);
             view += "list.jsp";

@@ -152,7 +152,6 @@ public class BoardJdbcDao implements BoardDao{
         }
         return board;
     }
-
     @Override
     public void save(Board board) {
         Connection connection = null;
@@ -247,5 +246,75 @@ public class BoardJdbcDao implements BoardDao{
             }
         }
         return count;
+    }
+
+    public int count(Pagination pagination){
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs =null;
+        int count = 0;
+        try{
+            connection = connectDB();
+            String sql = "";
+            if(pagination.getType().equals("title"))
+                sql="SELECT count(*) FROM board where title LIKE ?";
+            else sql = "SELECT count(*) FROM board where writer LIKE ?";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, pagination.getKeyword() + '%');
+            rs = ps.executeQuery();
+            rs.next();
+            count = rs.getInt("count(*)");
+
+        } catch (Exception e){
+
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e){
+                e.printStackTrace();;
+            }
+        }
+        return count;
+    }
+    public ArrayList<Board> getConc(Pagination pagination){
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs =null;
+        ArrayList<Board> boards = new ArrayList<>();
+        try{
+            connection = connectDB();
+            String sql;
+            if(pagination.getType().equals("title"))
+                sql="SELECT * FROM board where title LIKE ? order by id limit ?, ?";
+            else sql = "SELECT * FROM board where writer LIKE ? order by id limit ?, ?";
+            ps = connection.prepareStatement(sql);
+            ps.setString(1, pagination.getKeyword() + '%');
+            ps.setInt(2, ((pagination.getCurrentPage())-1)*pagination.getRecordsPerPage());
+            ps.setInt(3, pagination.getRecordsPerPage());
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                Long id = rs.getLong("id");
+                String title = rs.getString("title");
+                String content = rs.getString("content");
+                String writer = rs.getString("Writer");
+                LocalDateTime createdAt =  rs.getTimestamp("created_at").toLocalDateTime();
+                int viewCount = rs.getInt("view_count");
+                int commentCount = rs.getInt("comment_count");
+                boards.add(new Board(id,title,content,writer,createdAt,viewCount,commentCount));
+            }
+
+        } catch (Exception e){
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e){
+                e.printStackTrace();;
+            }
+        }
+        return boards;
     }
 }

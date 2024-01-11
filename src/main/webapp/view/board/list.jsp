@@ -6,26 +6,28 @@
 <%
   ArrayList<Board> boards = (ArrayList<Board>) request.getAttribute("boards");
   Pagination pagination = (Pagination) request.getAttribute("pagination");
-//  pagination.setStartIndex(((pagination.getCurrentPage()-1)/ pagination.getPagesOnScreen()) * pagination.getPagesOnScreen());
-//  int m = 0;
-//  int k = pagination.getStartIndex();
-//  if(pagination.getCurrentPage() == ((pagination.getTotalRecords()/pagination.getRecordsPerPage()) +
-//          ((pagination.getTotalRecords() % pagination.getRecordsPerPage() > 0) ? 1 : 0)))
-//      m = 1;
-//  if(pagination.getStartIndex() == 0)
-//    k = 1;
   pagination.calcPagination();
+  if(pagination.getType()==null){
+    pagination.setType("");
+  }
+  if(pagination.getKeyword()==null){
+    pagination.setKeyword("");
+  }
 %>
 <!DOCTYPE html>
 <html lang="en">
 
 <jsp:include page="/view/common/head.jsp">
-  <jsp:param name="title" value="게시판 목록" />
+  <jsp:param name="title" value="게시판 목록"/>
 </jsp:include>
 
 <body>
-  <jsp:include page="/view/common/header.jsp"/>
-
+  <jsp:include page="/view/common/header.jsp">
+    <jsp:param name="page" value="<%=pagination.getCurrentPage()%>"/>
+    <jsp:param name="type" value="<%=pagination.getType()%>"/>
+    <jsp:param name="term" value="<%=pagination.getTerm()%>"/>
+    <jsp:param name="keyword" value="<%=pagination.getKeyword()%>"/>
+  </jsp:include>
 
   <div>
     <h2 style="text-align: center; margin-top: 100px;"><b>게시판 목록</b></h2>
@@ -66,7 +68,8 @@
         <ul class="pagination pagination-sm">
           <% if(pagination.isHasPrev()) {%>
           <li class="page-item">
-            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%>">Previous</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%>&type=<%=pagination.getType()%>&keyword=<%=pagination.getKeyword()
+            %>&term=<%=pagination.getTerm()%>">Previous</a>
           </li>
           <% }  else {%>
           <li class="page-item disabled">
@@ -77,13 +80,13 @@
             for(int i = pagination.getStartPageOnScreen(); i <= pagination.getEndPageOnScreen(); i++) {
               if(pagination.getCurrentPage() == i ) {
           %>
-          <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%>"><%=i%></a></li>
+          <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%>&type=<%=pagination.getType()%>&keyword=<%=pagination.getKeyword()%>&term=<%=pagination.getTerm()%>"><%=i%></a></li>
           <%} else {%>
-          <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%>"><%=i%></a></li>
+          <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%>&type=<%=pagination.getType()%>&keyword=<%=pagination.getKeyword()%>&term=<%=pagination.getTerm()%>"><%=i%></a></li>
           <%}}%>
           <% if(pagination.isHasNext()) {%>
           <li class="page-item">
-            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>" >Next</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>&type=<%=pagination.getType()%>&keyword=<%=pagination.getKeyword()%>&term=<%=pagination.getTerm()%>" >Next</a>
           </li>
           <% }  else {%>
           <li class="page-item disabled">

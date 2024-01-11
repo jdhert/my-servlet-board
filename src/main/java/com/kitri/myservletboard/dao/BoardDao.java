@@ -16,4 +16,6 @@ public interface BoardDao {
 
     int count();
 
+    int count(Pagination pagination);
+    ArrayList<Board> getConc(Pagination pagination);
 }
