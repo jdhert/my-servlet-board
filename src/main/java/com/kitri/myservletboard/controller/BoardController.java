@@ -56,12 +56,14 @@ public class BoardController extends HttpServlet {
             String keyword = request.getParameter("keyword");
             String  term = request.getParameter("term");
 
+            if (term == null) pagination.setTerm("all");
+            else pagination.setTerm(term);
+
             if (page != null) pagination.setCurrentPage(Integer.parseInt(page));
             if(keyword != null) {
                 pagination.setType(type);
                 pagination.setKeyword(keyword);
             }
-            pagination.setTerm(term);
             boards = boardService.getBoards(pagination);
             request.setAttribute("pagination", pagination);
             request.setAttribute("boards", boards);

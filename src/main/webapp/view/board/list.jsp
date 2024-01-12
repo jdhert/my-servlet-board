@@ -2,16 +2,19 @@
 <%@ page import="com.kitri.myservletboard.data.Board" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="com.kitri.myservletboard.data.Pagination" %>
+<%@ page import="java.util.Objects" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
   ArrayList<Board> boards = (ArrayList<Board>) request.getAttribute("boards");
   Pagination pagination = (Pagination) request.getAttribute("pagination");
   pagination.calcPagination();
-  if(pagination.getType()==null){
+  String searchParam;
+  if(pagination.getKeyword()==null || Objects.equals(pagination.getKeyword(), "")){
     pagination.setType("");
-  }
-  if(pagination.getKeyword()==null){
     pagination.setKeyword("");
+    searchParam = "";
+  } else {
+    searchParam = "&term=" + pagination.getTerm() +"&type=" + pagination.getType() + "&keyword=" + pagination.getKeyword();
   }
 %>
 <!DOCTYPE html>
@@ -68,8 +71,7 @@
         <ul class="pagination pagination-sm">
           <% if(pagination.isHasPrev()) {%>
           <li class="page-item">
-            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%>&type=<%=pagination.getType()%>&keyword=<%=pagination.getKeyword()
-            %>&term=<%=pagination.getTerm()%>">Previous</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%><%=searchParam%>">Previous</a>
           </li>
           <% }  else {%>
           <li class="page-item disabled">
@@ -80,13 +82,13 @@
             for(int i = pagination.getStartPageOnScreen(); i <= pagination.getEndPageOnScreen(); i++) {
               if(pagination.getCurrentPage() == i ) {
           %>
-          <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%>&type=<%=pagination.getType()%>&keyword=<%=pagination.getKeyword()%>&term=<%=pagination.getTerm()%>"><%=i%></a></li>
+          <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%><%=searchParam%>"><%=i%></a></li>
           <%} else {%>
-          <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%>&type=<%=pagination.getType()%>&keyword=<%=pagination.getKeyword()%>&term=<%=pagination.getTerm()%>"><%=i%></a></li>
+          <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%><%=searchParam%>"><%=i%></a></li>
           <%}}%>
           <% if(pagination.isHasNext()) {%>
           <li class="page-item">
-            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>&type=<%=pagination.getType()%>&keyword=<%=pagination.getKeyword()%>&term=<%=pagination.getTerm()%>" >Next</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%><%=searchParam%>" >Next</a>
           </li>
           <% }  else {%>
           <li class="page-item disabled">

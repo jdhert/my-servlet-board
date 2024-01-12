@@ -25,26 +25,16 @@
         <form action="/board/list" method="get">
             <input name="page"type="text" value="1" hidden>
             <select name="term">
-                <option value="all">전체기간</option>
-                <option value="day">1일</option>
-                <option value="week">1주</option>
-                <option value="month">1개월</option>
-                <option value="half_mon">6개월</option>
-                <option value="year">1년</option>
+                <option value="all" ${param.term == 'all' || param.term == '' ? 'selected' : ''}>전체기간</option>
+                <option value="day" ${param.term == 'day' ? 'selected' : ''}>1일</option>
+                <option value="week" ${param.term == 'week' ? 'selected' : ''}>1주</option>
+                <option value="month" ${param.term == 'month' ? 'selected' : ''}>1개월</option>
+                <option value="half_mon" ${param.term == 'half_mon' ? 'selected' : ''}>6개월</option>
+                <option value="year" ${param.term == 'year' ? 'selected' : ''}>1년</option>
             </select>
             <select name="type">
-<%--                <c:choose>  <!-- if, else의 시작임을 정의 -->--%>
-<%--                    <c:when test="${param.type eq 'title' || param.type eq ''}"> <!-- if와 동일 -->--%>
-<%--                        <option id ="title" value="title" selected>제목</option>--%>
-<%--                        <option id= "writer" value="writer">작성자</option>--%>
-<%--                    </c:when> <!-- if 종료 -->--%>
-<%--                    <c:otherwise> <!-- else와 동일 -->--%>
-<%--                        <option id ="title" value="title">제목</option>--%>
-<%--                        <option id= "writer" value="writer" selected>작성자</option>--%>
-<%--                    </c:otherwise> <!-- else 종료 -->--%>
-<%--                </c:choose>  <!-- if, else의 종료임을 정의-->--%>
-                <option id ="title" value="title">제목</option>
-                <option id= "writer" value="writer">작성자</option>
+                    <option value="title" ${param.type == 'title' || param.type == '' ? 'selected' : ''}>제목</option>
+                    <option value="writer" ${param.type == 'writer' ? 'selected' : ''}>작성자</option>
             </select>
             <input name="keyword" type="text" value="${param.keyword}">
             <button type="submit">Search</button>
