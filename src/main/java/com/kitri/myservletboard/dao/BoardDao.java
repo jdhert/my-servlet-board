@@ -20,7 +20,4 @@ public interface BoardDao {
     ArrayList<Board> getConc(Pagination pagination);
 
 
-    ArrayList<Board> getConc(Pagination pagination, String term);
-    int count(Pagination pagination, String term);
-
 }

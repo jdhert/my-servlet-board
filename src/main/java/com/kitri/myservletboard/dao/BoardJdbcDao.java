@@ -9,6 +9,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class BoardJdbcDao implements BoardDao{
 
@@ -83,11 +84,10 @@ public class BoardJdbcDao implements BoardDao{
 
         try{
             connection = connectDB();
-            String sql = "SELECT * FROM board order by id limit ?, ?";
+            String sql = "SELECT * FROM board order by " + pagination.getOrderBy() +" desc limit ?, ?";
             ps = connection.prepareStatement(sql);
             ps.setInt(1, ((pagination.getCurrentPage())-1)*pagination.getRecordsPerPage());
             ps.setInt(2, pagination.getRecordsPerPage());
-            // currentPage 1 -> 0 2-> 10 3-> 20 4-> 30
             rs = ps.executeQuery();
 
             while(rs.next()) {
@@ -248,47 +248,110 @@ public class BoardJdbcDao implements BoardDao{
         return count;
     }
 
-    public int count(Pagination pagination){
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs =null;
-        int count = 0;
-        try{
-            connection = connectDB();
-            String sql;
-            if(pagination.getType().equals("title"))
-                sql="SELECT count(*) FROM board where title LIKE ?";
-            else sql = "SELECT count(*) FROM board where writer LIKE ?";
-            ps = connection.prepareStatement(sql);
-            ps.setString(1, pagination.getKeyword() + '%');
-            rs = ps.executeQuery();
-            rs.next();
-            count = rs.getInt("count(*)");
+//    public int count(Pagination pagination){
+//        Connection connection = null;
+//        PreparedStatement ps = null;
+//        ResultSet rs =null;
+//        int count = 0;
+//        try{
+//            connection = connectDB();
+//            String sql;
+//            if(pagination.getType().equals("title"))
+//                sql="SELECT count(*) FROM board where title LIKE ?";
+//            else sql = "SELECT count(*) FROM board where writer LIKE ?";
+//            ps = connection.prepareStatement(sql);
+//            ps.setString(1, pagination.getKeyword() + '%');
+//            rs = ps.executeQuery();
+//            rs.next();
+//            count = rs.getInt("count(*)");
+//
+//        } catch (Exception e){
+//
+//        } finally {
+//            try {
+//                rs.close();
+//                ps.close();
+//                connection.close();
+//            } catch (Exception e){
+//                e.printStackTrace();;
+//            }
+//        }
+//        return count;
+//    }
+//    public ArrayList<Board> getConc(Pagination pagination){
+//        Connection connection = null;
+//        PreparedStatement ps = null;
+//        ResultSet rs =null;
+//        ArrayList<Board> boards = new ArrayList<>();
+//        try{
+//            connection = connectDB();
+//            String sql;
+//            if(pagination.getType().equals("title"))
+//                sql="SELECT * FROM board where title LIKE ? order by id limit ?, ?";
+//            else sql = "SELECT * FROM board where writer LIKE ? order by id limit ?, ?";
+//            ps = connection.prepareStatement(sql);
+//            ps.setString(1, pagination.getKeyword() + '%');
+//            ps.setInt(2, ((pagination.getCurrentPage())-1)*pagination.getRecordsPerPage());
+//            ps.setInt(3, pagination.getRecordsPerPage());
+//            rs = ps.executeQuery();
+//            while(rs.next()) {
+//                Long id = rs.getLong("id");
+//                String title = rs.getString("title");
+//                String content = rs.getString("content");
+//                String writer = rs.getString("Writer");
+//                LocalDateTime createdAt =  rs.getTimestamp("created_at").toLocalDateTime();
+//                int viewCount = rs.getInt("view_count");
+//                int commentCount = rs.getInt("comment_count");
+//                boards.add(new Board(id,title,content,writer,createdAt,viewCount,commentCount));
+//            }
+//
+//        } catch (Exception e){
+//        } finally {
+//            try {
+//                rs.close();
+//                ps.close();
+//                connection.close();
+//            } catch (Exception e){
+//                e.printStackTrace();;
+//            }
+//        }
+//        return boards;
+//    }
 
-        } catch (Exception e){
-
-        } finally {
-            try {
-                rs.close();
-                ps.close();
-                connection.close();
-            } catch (Exception e){
-                e.printStackTrace();;
-            }
-        }
-        return count;
-    }
-    public ArrayList<Board> getConc(Pagination pagination){
+    @Override
+    public ArrayList<Board> getConc(Pagination pagination) {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs =null;
         ArrayList<Board> boards = new ArrayList<>();
+        String ord = "desc";
         try{
             connection = connectDB();
-            String sql;
-            if(pagination.getType().equals("title"))
-                sql="SELECT * FROM board where title LIKE ? order by id limit ?, ?";
-            else sql = "SELECT * FROM board where writer LIKE ? order by id limit ?, ?";
+            String sql="";
+            if(Objects.equals(pagination.getOrderBy(), "accuracy") && !pagination.getKeyword().isEmpty()){
+                pagination.setOrderBy(pagination.getType());
+                ord = "asc";
+            }
+            switch (pagination.getTerm()) {
+                    case "all":
+                        sql = "SELECT * FROM board where " + pagination.getType() + " LIKE ? order by " + pagination.getOrderBy() + " " + ord + " limit ?, ?";
+                        break;
+                    case "day":
+                        sql = "SELECT * FROM board where " + pagination.getType() + " LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 DAY ) AND NOW() order by " + pagination.getOrderBy() + " " + ord + " limit ?, ?";
+                        break;
+                    case "week":
+                        sql = "SELECT * FROM board where " + pagination.getType() + " LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 WEEK ) AND NOW() order by " + pagination.getOrderBy() + " " + ord + " limit ?, ?";
+                        break;
+                    case "month":
+                        sql = "SELECT * FROM board where " + pagination.getType() + " LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 MONTH ) AND NOW() order by " + pagination.getOrderBy() + " " + ord + " limit ?, ?";
+                        break;
+                    case "half_mon":
+                        sql = "SELECT * FROM board where " + pagination.getType() + " LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -6 MONTH ) AND NOW()  order by " + pagination.getOrderBy() + " " + ord + " limit ?, ?";
+                        break;
+                    case "year":
+                        sql = "SELECT * FROM board where " + pagination.getType() + " LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 YEAR ) AND NOW()  order by " + pagination.getOrderBy() + " " + ord + " limit ?, ?";
+                        break;
+            }
             ps = connection.prepareStatement(sql);
             ps.setString(1, pagination.getKeyword() + '%');
             ps.setInt(2, ((pagination.getCurrentPage())-1)*pagination.getRecordsPerPage());
@@ -315,76 +378,12 @@ public class BoardJdbcDao implements BoardDao{
                 e.printStackTrace();;
             }
         }
+        if(Objects.equals(ord, "asc")) pagination.setOrderBy("accuracy");
         return boards;
     }
 
     @Override
-    public ArrayList<Board> getConc(Pagination pagination, String term) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs =null;
-        ArrayList<Board> boards = new ArrayList<>();
-        try{
-            connection = connectDB();
-            String sql="";
-            switch (term){
-                case "day":
-                    if(pagination.getType().equals("title"))
-                        sql="SELECT * FROM board where title LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 DAY ) AND NOW() order by id limit ?, ?";
-                    else sql = "SELECT * FROM board where writer LIKE ? AND DATE_ADD( DATE(NOW()), INTERVAL -1 DAY ) AND NOW()  order by id limit ?, ?";
-                    break;
-                case "week":
-                    if(pagination.getType().equals("title"))
-                        sql="SELECT * FROM board where title LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 WEEK ) AND NOW() order by id limit ?, ?";
-                    else sql = "SELECT * FROM board where writer LIKE ? AND DATE_ADD( DATE(NOW()), INTERVAL -1 WEEK ) AND NOW()  order by id limit ?, ?";
-                    break;
-                case "month":
-                    if(pagination.getType().equals("title"))
-                        sql="SELECT * FROM board where title LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 MONTH ) AND NOW() order by id limit ?, ?";
-                    else sql = "SELECT * FROM board where writer LIKE ? AND DATE_ADD( DATE(NOW()), INTERVAL -1 MONTH ) AND NOW()  order by id limit ?, ?";
-                    break;
-                case "half_mon":
-                    if(pagination.getType().equals("title"))
-                        sql="SELECT * FROM board where title LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -6 MONTH ) AND NOW()  order by id limit ?, ?";
-                    else sql = "SELECT * FROM board where writer LIKE ? AND DATE_ADD( DATE(NOW()), INTERVAL -6 MONTH ) AND NOW()  order by id limit ?, ?";
-                    break;
-                case "year":
-                    if(pagination.getType().equals("title"))
-                        sql="SELECT * FROM board where title LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 YEAR ) AND NOW()  order by id limit ?, ?";
-                    else sql = "SELECT * FROM board where writer LIKE ? AND DATE_ADD( DATE(NOW()), INTERVAL -1 YEAR ) AND NOW()  order by id limit ?, ?";
-                    break;
-            }
-            ps = connection.prepareStatement(sql);
-            ps.setString(1, pagination.getKeyword() + '%');
-            ps.setInt(2, ((pagination.getCurrentPage())-1)*pagination.getRecordsPerPage());
-            ps.setInt(3, pagination.getRecordsPerPage());
-            rs = ps.executeQuery();
-            while(rs.next()) {
-                Long id = rs.getLong("id");
-                String title = rs.getString("title");
-                String content = rs.getString("content");
-                String writer = rs.getString("Writer");
-                LocalDateTime createdAt =  rs.getTimestamp("created_at").toLocalDateTime();
-                int viewCount = rs.getInt("view_count");
-                int commentCount = rs.getInt("comment_count");
-                boards.add(new Board(id,title,content,writer,createdAt,viewCount,commentCount));
-            }
-
-        } catch (Exception e){
-        } finally {
-            try {
-                rs.close();
-                ps.close();
-                connection.close();
-            } catch (Exception e){
-                e.printStackTrace();;
-            }
-        }
-        return boards;
-    }
-
-    @Override
-    public int count(Pagination pagination, String term) {
+    public int count(Pagination pagination) {
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs =null;
@@ -392,32 +391,24 @@ public class BoardJdbcDao implements BoardDao{
         try{
             connection = connectDB();
             String sql="";
-
-            switch (term){
+            switch (pagination.getTerm()){
+                case "all":
+                    sql="SELECT count(*) FROM board where " + pagination.getType() + " LIKE ?";
+                    break;
                 case "day":
-                    if(pagination.getType().equals("title"))
-                        sql="SELECT count(*) FROM board where title LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 DAY ) AND NOW()";
-                    else sql = "SELECT count(*) FROM board where writer LIKE ? AND DATE_ADD( DATE(NOW()), INTERVAL -1 DAY ) AND NOW() ";
+                    sql="SELECT count(*) FROM board where " + pagination.getType() + " LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 DAY ) AND NOW()";
                     break;
                 case "week":
-                    if(pagination.getType().equals("title"))
-                        sql="SELECT count(*) FROM board where title LIKE ? AND created_at BETWEEN DATE_ADD(NOW(), INTERVAL -1 WEEK ) AND NOW() ";
-                    else sql = "SELECT count(*) FROM board where writer LIKE ? AND DATE_ADD( DATE(NOW()), INTERVAL -1 WEEK ) AND NOW() ";
+                    sql="SELECT count(*) FROM board where " + pagination.getType() + " LIKE ? AND created_at BETWEEN DATE_ADD(NOW(), INTERVAL -1 WEEK ) AND NOW()";
                     break;
                 case "month":
-                    if(pagination.getType().equals("title"))
-                        sql="SELECT count(*) FROM board where title LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 MONTH ) AND NOW() ";
-                    else sql = "SELECT count(*) FROM board where writer LIKE ? AND DATE_ADD(DATE(NOW()), INTERVAL -1 MONTH ) AND NOW() ";
+                    sql="SELECT count(*) FROM board where " + pagination.getType() + " LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 MONTH ) AND NOW()";
                     break;
                 case "half_mon":
-                    if(pagination.getType().equals("title"))
-                        sql="SELECT count(*) FROM board where title LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -6 MONTH ) AND NOW() ";
-                    else sql = "SELECT count(*) FROM board where writer LIKE ? AND DATE_ADD( DATE(NOW()), INTERVAL -6 MONTH ) AND NOW() ";
+                    sql="SELECT count(*) FROM board where " + pagination.getType() + " LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -6 MONTH ) AND NOW()";
                     break;
                 case "year":
-                    if(pagination.getType().equals("title"))
-                        sql="SELECT count(*) FROM board where title LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 YEAR ) AND NOW() ";
-                    else sql = "SELECT count(*) FROM board where writer LIKE ? AND DATE_ADD( DATE(NOW()), INTERVAL -1 YEAR ) AND NOW() ";
+                    sql="SELECT count(*) FROM board where " + pagination.getType() + " LIKE ? AND created_at BETWEEN DATE_ADD( DATE(NOW()), INTERVAL -1 YEAR ) AND NOW()";
                     break;
             }
             ps = connection.prepareStatement(sql);

@@ -73,6 +73,16 @@ public class Pagination {
 
     private String term;
 
+    private String orderBy;
+
+    public String getOrderBy() {
+        return orderBy;
+    }
+
+    public void setOrderBy(String orderBy) {
+        this.orderBy = orderBy;
+    }
+
     public String getTerm() {
         return term;
     }

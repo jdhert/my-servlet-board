@@ -55,19 +55,33 @@ public class BoardController extends HttpServlet {
             String type = request.getParameter("type");
             String keyword = request.getParameter("keyword");
             String  term = request.getParameter("term");
+            String orderBy = request.getParameter("orderBy");
+            String maxRecordsPerPage = request.getParameter("maxRecordsPerPage");
 
-            if (term == null) pagination.setTerm("all");
+            if(maxRecordsPerPage != null) pagination.setRecordsPerPage(Integer.parseInt(maxRecordsPerPage));
+
+            if (term == null || term.isEmpty()) pagination.setTerm("all");
             else pagination.setTerm(term);
 
+            if(type == null || type.isEmpty()) pagination.setType("title");
+            else pagination.setType(type);
+
             if (page != null) pagination.setCurrentPage(Integer.parseInt(page));
-            if(keyword != null) {
-                pagination.setType(type);
-                pagination.setKeyword(keyword);
-            }
+
+            if(keyword == null) pagination.setKeyword("");
+            else pagination.setKeyword(keyword);
+//            if(keyword != null) {
+//                pagination.setKeyword(keyword);
+//            }
+
+            if (orderBy == null) pagination.setOrderBy("created_at");
+            else pagination.setOrderBy(orderBy);
+
             boards = boardService.getBoards(pagination);
             request.setAttribute("pagination", pagination);
             request.setAttribute("boards", boards);
             view += "list.jsp";
+
         } else if (command.equals("/board/createForm")) {
             // 요청: 게시글 등록하게 등록폼 좀 주라는 뜻
             // 응답: 등록폼으로 응답 by 리다이렉트 or 포워드

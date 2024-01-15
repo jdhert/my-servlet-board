@@ -11,8 +11,8 @@
     <title>Title</title>
 </head>
 <body>
-    <header>
-    <a class="logo" href="/board/list"><span class="material-symbols-outlined">
+    <header class="d-flex flex-row">
+    <a class="logo" href="/board/list"><span class="pb-5 material-symbols-outlined">
     location_city
     </span></a>
     <nav>
@@ -22,7 +22,8 @@
             <li><a href="/view/member/registration.jsp">회원정보수정</a></li>
             <li><a href="/view/member/login.jsp">로그인</a></li>
         </ul>
-        <form action="/board/list" method="get">
+    </nav>
+        <form class="form-inline my-2 my-lg-0 ml-auto pr-5" action="/board/list" method="get">
             <input name="page"type="text" value="1" hidden>
             <select name="term">
                 <option value="all" ${param.term == 'all' || param.term == '' ? 'selected' : ''}>전체기간</option>
@@ -32,14 +33,21 @@
                 <option value="half_mon" ${param.term == 'half_mon' ? 'selected' : ''}>6개월</option>
                 <option value="year" ${param.term == 'year' ? 'selected' : ''}>1년</option>
             </select>
+            &nbsp;
             <select name="type">
-                    <option value="title" ${param.type == 'title' || param.type == '' ? 'selected' : ''}>제목</option>
-                    <option value="writer" ${param.type == 'writer' ? 'selected' : ''}>작성자</option>
+                <option value="title" ${param.type == 'title' || param.type == '' ? 'selected' : ''}>제목</option>
+                <option value="writer" ${param.type == 'writer' ? 'selected' : ''}>작성자</option>
             </select>
-            <input name="keyword" type="text" value="${param.keyword}">
-            <button type="submit">Search</button>
+            &nbsp;
+            <input class="form-control mr-sm-2" name="keyword" type="text" value="${param.keyword}">
+            <button class="btn btn-outline-success my-2 my-sm-0" type="submit">Search</button>
         </form>
-    </nav>
     </header>
 </body>
+<style>
+    select {
+        height: 60%;
+        border-radius: 5px;
+    }
+</style>
 </html>

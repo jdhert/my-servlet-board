@@ -9,13 +9,15 @@
   Pagination pagination = (Pagination) request.getAttribute("pagination");
   pagination.calcPagination();
   String searchParam;
-  if(pagination.getKeyword()==null || Objects.equals(pagination.getKeyword(), "")){
+  if(pagination.getKeyword()==null || Objects.equals(pagination.getKeyword(), "")) {
     pagination.setType("");
     pagination.setKeyword("");
-    searchParam = "";
-  } else {
-    searchParam = "&term=" + pagination.getTerm() +"&type=" + pagination.getType() + "&keyword=" + pagination.getKeyword();
   }
+//    searchParam = "";
+//  } else {
+  searchParam = "&term=" + pagination.getTerm() +"&type=" + pagination.getType() + "&keyword=" + pagination.getKeyword() +
+          "&orderBy=" + pagination.getOrderBy() + "&maxRecordsPerPage="+ pagination.getRecordsPerPage();
+//  }
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -33,8 +35,29 @@
   </jsp:include>
 
   <div>
-    <h2 style="text-align: center; margin-top: 100px;"><b>게시판 목록</b></h2>
-  </div>
+    <div class="d-flex justify-content-around position-relative" style="text-align: center; margin-top: 80px; margin-right: 15%; margin-left: 47%">
+    <h2><b>게시판 목록</b></h2>
+      <form class="form-inline my-2 my-lg-0 ml-auto pr-5 mt-5" action="/board/list">
+        <input hidden type="text" name="type" value="<%=pagination.getType()%>">
+        <input hidden type="text" name="keyword" value="<%=pagination.getKeyword()%>">
+        <input hidden type="text" name="term" value="<%=pagination.getTerm()%>">
+        <select name="orderBy" onchange="this.form.submit()">
+          <option value="created_at" <%=Objects.equals(pagination.getOrderBy(), "created_at") ? "selected" : ""%>>최신순</option>
+          <option value="view_count" <%=Objects.equals(pagination.getOrderBy(), "view_count") ? "selected" : ""%>>조회순</option>
+          <option value="accuracy" <%=Objects.equals(pagination.getOrderBy(), "accuracy") ? "selected" : ""%>>정확도순</option>
+        </select>
+        &nbsp;
+        <select name="maxRecordsPerPage" onchange="this.form.submit()">
+          <option value="5" <%=pagination.getRecordsPerPage() == 5 ? "selected" : ""%>>5개씩 보기</option>
+          <option value="10" <%=pagination.getRecordsPerPage() == 10 ? "selected" : ""%>>10개씩 보기</option>
+          <option value="15" <%=pagination.getRecordsPerPage() == 15 ? "selected" : ""%>>15개씩 보기</option>
+          <option value="20" <%=pagination.getRecordsPerPage() == 20 ? "selected" : ""%>>20개씩 보기</option>
+          <option value="30" <%=pagination.getRecordsPerPage() == 30 ? "selected" : ""%>>30개씩 보기</option>
+          <option value="40" <%=pagination.getRecordsPerPage() == 40 ? "selected" : ""%>>40개씩 보기</option>
+          <option value="50" <%=pagination.getRecordsPerPage() == 50 ? "selected" : ""%>>50개씩 보기</option>
+        </select>
+      </form>
+    </div>
   <div class="container class=d-flex justify-content-center">
     <div class="p-2 border-primary mb-3">
       <table class="table align-middle table-hover">
@@ -110,7 +133,7 @@
     </div>
   </div>
 
-
+  </div>
 </body>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
   integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
