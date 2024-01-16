@@ -16,26 +16,26 @@ public class BoardMemoryDao implements BoardDao{
     ArrayList<Board> memoryBoardDB = new ArrayList<>();
 
     public BoardMemoryDao() {
-        memoryBoardDB.add(new Board(1L, "첫번째 글입니다!!!", "Parental Advisory", "손흥민", LocalDateTime.now(),
-                10, 1));
-        memoryBoardDB.add(new Board(2L, "두번째 글입니다!!!", "Parental Advisory", "김민재", LocalDateTime.now(),
-                10, 1));
-        memoryBoardDB.add(new Board(3L, "세번째 글입니다!!!", "Parental Advisory", "이강인", LocalDateTime.now(),
-                10, 1));
-        memoryBoardDB.add(new Board(4L, "네번째 글입니다!!!", "Parental Advisory", "황희찬", LocalDateTime.now(),
-                10, 1));
-        memoryBoardDB.add(new Board(5L, "다섯 번째 글입니다!!!", "Parental Advisory", "황인범", LocalDateTime.now(),
-                10, 1));
-        memoryBoardDB.add(new Board(6L, "여섯 번째 글입니다!!!", "Parental Advisory", "조규성", LocalDateTime.now(),
-                10, 1));
-        memoryBoardDB.add(new Board(7L, "일곱 번째 글입니다!!!", "Parental Advisory", "이재성", LocalDateTime.now(),
-                10, 1));
-        memoryBoardDB.add(new Board(8L, "여덟 번째 글입니다!!!", "Parental Advisory", "이기재", LocalDateTime.now(),
-                10, 1));
-        memoryBoardDB.add(new Board(9L, "아홉 번째 글입니다!!!", "Parental Advisory", "김영권", LocalDateTime.now(),
-                10, 1));
-        memoryBoardDB.add(new Board(10L, "열번째 글입니다!!!", "Parental Advisory", "김승규", LocalDateTime.now(),
-                10, 1));
+//        memoryBoardDB.add(new Board(1L, "첫번째 글입니다!!!", "Parental Advisory", "손흥민", LocalDateTime.now(),
+//                10, 1));
+//        memoryBoardDB.add(new Board(2L, "두번째 글입니다!!!", "Parental Advisory", "김민재", LocalDateTime.now(),
+//                10, 1));
+//        memoryBoardDB.add(new Board(3L, "세번째 글입니다!!!", "Parental Advisory", "이강인", LocalDateTime.now(),
+//                10, 1));
+//        memoryBoardDB.add(new Board(4L, "네번째 글입니다!!!", "Parental Advisory", "황희찬", LocalDateTime.now(),
+//                10, 1));
+//        memoryBoardDB.add(new Board(5L, "다섯 번째 글입니다!!!", "Parental Advisory", "황인범", LocalDateTime.now(),
+//                10, 1));
+//        memoryBoardDB.add(new Board(6L, "여섯 번째 글입니다!!!", "Parental Advisory", "조규성", LocalDateTime.now(),
+//                10, 1));
+//        memoryBoardDB.add(new Board(7L, "일곱 번째 글입니다!!!", "Parental Advisory", "이재성", LocalDateTime.now(),
+//                10, 1));
+//        memoryBoardDB.add(new Board(8L, "여덟 번째 글입니다!!!", "Parental Advisory", "이기재", LocalDateTime.now(),
+//                10, 1));
+//        memoryBoardDB.add(new Board(9L, "아홉 번째 글입니다!!!", "Parental Advisory", "김영권", LocalDateTime.now(),
+//                10, 1));
+//        memoryBoardDB.add(new Board(10L, "열번째 글입니다!!!", "Parental Advisory", "김승규", LocalDateTime.now(),
+//                10, 1));
 
     }
 

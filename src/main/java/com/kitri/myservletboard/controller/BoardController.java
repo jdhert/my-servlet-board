@@ -92,7 +92,7 @@ public class BoardController extends HttpServlet {
             // 요청: 게시글 등록하게 게시판 이렇게 좀 만들어 주라는 뜻
             // 응답: by 리다이렉트 or 포워드
             boardService.addBoard(new Board(null, request.getParameter("title"),request.getParameter("content"),
-                    request.getParameter("writer"), LocalDateTime.now(), 0, 0));
+                    request.getParameter("writer"), LocalDateTime.now(), 0, 0, Long.parseLong(request.getParameter("member_id"))));
             response.sendRedirect("/board/list");
             return;
         } else if (command.equals("/board/updateForm")) {
@@ -107,7 +107,7 @@ public class BoardController extends HttpServlet {
             // 요청: 이 번호의 게시판 이렇게 수정해주라는 뜻
             // 응답: by 리다이렉트 or 포워드
             boardService.updateBoard((new Board(Long.parseLong(request.getParameter("id")), request.getParameter("title"),request.getParameter("content"),
-                    request.getParameter("writer"), LocalDateTime.now(),0, 0)));
+                    request.getParameter("writer"), LocalDateTime.now(),0, 0,Long.parseLong(request.getParameter("member_id")))));
             response.sendRedirect("/board/list");
             return;
         } else if (command.equals("/board/delete")) {

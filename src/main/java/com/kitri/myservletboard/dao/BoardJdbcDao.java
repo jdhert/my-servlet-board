@@ -37,82 +37,84 @@ public class BoardJdbcDao implements BoardDao{
     }
     @Override
     public ArrayList<Board> getAll() {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs =null;
-
-        ArrayList<Board> boards = new ArrayList<>();
-
-        try{
-            connection = connectDB();
-            String sql = "SELECT * FROM board";
-            ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery(sql);
-
-            while(rs.next()) {
-                Long id = rs.getLong("id");
-                String title = rs.getString("title");
-                String content = rs.getString("content");
-                String writer = rs.getString("Writer");
-                LocalDateTime createdAt =  rs.getTimestamp("created_at").toLocalDateTime();
-                int viewCount = rs.getInt("view_count");
-                int commentCount = rs.getInt("comment_count");
-
-                boards.add(new Board(id,title,content,writer,createdAt,viewCount,commentCount));
-            }
-        } catch (Exception e){
-
-        } finally {
-            try {
-                rs.close();
-                ps.close();
-                connection.close();
-            } catch (Exception e){
-                e.printStackTrace();;
-            }
-        }
-        return boards;
+//        Connection connection = null;
+//        PreparedStatement ps = null;
+//        ResultSet rs =null;
+//
+//        ArrayList<Board> boards = new ArrayList<>();
+//
+//        try{
+//            connection = connectDB();
+//            String sql = "SELECT * FROM board";
+//            ps = connection.prepareStatement(sql);
+//            rs = ps.executeQuery(sql);
+//
+//            while(rs.next()) {
+//                Long id = rs.getLong("id");
+//                String title = rs.getString("title");
+//                String content = rs.getString("content");
+//                String writer = rs.getString("Writer");
+//                LocalDateTime createdAt =  rs.getTimestamp("created_at").toLocalDateTime();
+//                int viewCount = rs.getInt("view_count");
+//                int commentCount = rs.getInt("comment_count");
+//
+//                boards.add(new Board(id,title,content,writer,createdAt,viewCount,commentCount));
+//            }
+//        } catch (Exception e){
+//
+//        } finally {
+//            try {
+//                rs.close();
+//                ps.close();
+//                connection.close();
+//            } catch (Exception e){
+//                e.printStackTrace();;
+//            }
+//        }
+//        return boards;
+        return null;
     }
 
     @Override
     public ArrayList<Board> getAll(Pagination pagination) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs =null;
-
-        ArrayList<Board> boards = new ArrayList<>();
-
-        try{
-            connection = connectDB();
-            String sql = "SELECT * FROM board order by " + pagination.getOrderBy() +" desc limit ?, ?";
-            ps = connection.prepareStatement(sql);
-            ps.setInt(1, ((pagination.getCurrentPage())-1)*pagination.getRecordsPerPage());
-            ps.setInt(2, pagination.getRecordsPerPage());
-            rs = ps.executeQuery();
-
-            while(rs.next()) {
-                Long id = rs.getLong("id");
-                String title = rs.getString("title");
-                String content = rs.getString("content");
-                String writer = rs.getString("Writer");
-                LocalDateTime createdAt =  rs.getTimestamp("created_at").toLocalDateTime();
-                int viewCount = rs.getInt("view_count");
-                int commentCount = rs.getInt("comment_count");
-
-                boards.add(new Board(id,title,content,writer,createdAt,viewCount,commentCount));
-            }
-        } catch (Exception e){
-
-        } finally {
-            try {
-                rs.close();
-                ps.close();
-                connection.close();
-            } catch (Exception e){
-                e.printStackTrace();;
-            }
-        }
-        return boards;
+//        Connection connection = null;
+//        PreparedStatement ps = null;
+//        ResultSet rs =null;
+//
+//        ArrayList<Board> boards = new ArrayList<>();
+//
+//        try{
+//            connection = connectDB();
+//            String sql = "SELECT * FROM board order by " + pagination.getOrderBy() +" desc limit ?, ?";
+//            ps = connection.prepareStatement(sql);
+//            ps.setInt(1, ((pagination.getCurrentPage())-1)*pagination.getRecordsPerPage());
+//            ps.setInt(2, pagination.getRecordsPerPage());
+//            rs = ps.executeQuery();
+//
+//            while(rs.next()) {
+//                Long id = rs.getLong("id");
+//                String title = rs.getString("title");
+//                String content = rs.getString("content");
+//                String writer = rs.getString("Writer");
+//                LocalDateTime createdAt =  rs.getTimestamp("created_at").toLocalDateTime();
+//                int viewCount = rs.getInt("view_count");
+//                int commentCount = rs.getInt("comment_count");
+//
+//                boards.add(new Board(id,title,content,writer,createdAt,viewCount,commentCount));
+//            }
+//        } catch (Exception e){
+//
+//        } finally {
+//            try {
+//                rs.close();
+//                ps.close();
+//                connection.close();
+//            } catch (Exception e){
+//                e.printStackTrace();;
+//            }
+//        }
+//        return boards;
+        return null;
     }
 
     @Override
@@ -136,8 +138,9 @@ public class BoardJdbcDao implements BoardDao{
                 LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
                 int viewCount = rs.getInt("view_count");
                 int commentCount = rs.getInt("comment_count");
+                Long member_id = rs.getLong("member_id");
 
-                board = new Board(id2, title, content, writer, createdAt, viewCount, commentCount);
+                board = new Board(id2, title, content, writer, createdAt, viewCount, commentCount, member_id);
             }
         } catch (Exception e){
 
@@ -158,11 +161,12 @@ public class BoardJdbcDao implements BoardDao{
         PreparedStatement ps = null;
         try {
             connection = connectDB();
-            String sql = "INSERT INTO board (title, content, writer )values (?,?,?)";
+            String sql = "INSERT INTO board (title, content, writer, member_id )values (?,?,?,?)";
             ps = connection.prepareStatement(sql);
             ps.setString(1,board.getTitle());
             ps.setString(2,board.getContent());
             ps.setString(3,board.getWriter());
+            ps.setLong(4,board.getMember_id());
             ps.executeUpdate();
         } catch (Exception e){
         }finally {
@@ -365,7 +369,8 @@ public class BoardJdbcDao implements BoardDao{
                 LocalDateTime createdAt =  rs.getTimestamp("created_at").toLocalDateTime();
                 int viewCount = rs.getInt("view_count");
                 int commentCount = rs.getInt("comment_count");
-                boards.add(new Board(id,title,content,writer,createdAt,viewCount,commentCount));
+                Long member_id = rs.getLong("member_id");
+                boards.add(new Board(id,title,content,writer,createdAt,viewCount,commentCount, member_id));
             }
 
         } catch (Exception e){
@@ -429,5 +434,34 @@ public class BoardJdbcDao implements BoardDao{
             }
         }
         return count;
+    }
+
+    public ArrayList<String> getUserId(){
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs =null;
+        ArrayList<String> userIds = null;
+        try{
+            connection = connectDB();
+            String sql = "SELECT login_id from member";
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+            while(rs.next()) {
+                String userId = rs.getString("login_id");
+                userIds.add(userId);
+            }
+
+        } catch (Exception e){
+
+        } finally {
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+            } catch (Exception e){
+                e.printStackTrace();;
+            }
+        }
+        return userIds;
     }
 }

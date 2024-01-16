@@ -11,9 +11,19 @@ public class Board {
     private int viewCount;
     private int commentCount;
 
+    public Long getMember_id() {
+        return member_id;
+    }
+
+    public void setMember_id(Long member_id) {
+        this.member_id = member_id;
+    }
+
+    private Long member_id;
+
     public Board() {
     }
-    public Board(Long id, String title, String content, String writer, LocalDateTime createdAt, int viewCount, int commentCount) {
+    public Board(Long id, String title, String content, String writer, LocalDateTime createdAt, int viewCount, int commentCount, Long member_id) {
         this.id = id;
         this.title = title;
         this.content = content;
@@ -21,6 +31,7 @@ public class Board {
         this.createdAt = createdAt;
         this.viewCount = viewCount;
         this.commentCount = commentCount;
+        this.member_id=member_id;
     }
 
     public Long getId() {

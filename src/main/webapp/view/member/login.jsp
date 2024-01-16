@@ -11,9 +11,9 @@
 
     <jsp:include page="/view/common/header.jsp"/>
 
-
     <div class="login-form">
-            <form>
+        <div class="notification">${requestScope.loginFailed ? "로그인이 실패하였습니다. 아이디 혹은 비밀번호를 정확하게 입력해주세요." : ""}</div>
+            <form action="/login/Login" method="post">
                 <h2><b>Bootstrap</b></h2>
                 <hr>
                 <br>
@@ -36,7 +36,11 @@
         </div>
 
     </body>
-</body>
+<script>
+    setTimeout(() => {
+        document.querySelector(".notification").hidden = true;
+    }, 2000);
+</script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
     crossorigin="anonymous"></script>

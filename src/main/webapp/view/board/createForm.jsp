@@ -16,7 +16,7 @@
         <hr>
         <br>
         <form class="validation-form" novalidate action="/board/create" method="post">
-
+          <input type="number" name="member_id" value="${param.ide}" hidden>
           <div class="mb-3">
             <label for="title">제목</label>
             <input type="text" name="title" class="form-control" id="title" placeholder="제목을 입력해주세요" required>
@@ -28,7 +28,7 @@
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="name">작성자</label>
-              <input type="text" name="writer" class="form-control" id="name" placeholder="" value="" required>
+              <input type="text" name="writer" class="form-control" id="name" placeholder="" value="${param.author}" readonly>
               <div class="invalid-feedback">
                 작성자를 입력해주세요.
               </div>
