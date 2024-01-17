@@ -24,6 +24,9 @@ public class BoardController extends HttpServlet {
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
         request.setCharacterEncoding("UTF-8");
+
+
+
         PrintWriter out = response.getWriter();
         out.println("<h1> 요청을 잘 응답 받았습니다</h1>");
         //URL을 파싱해서 어떤 요청인지 파악
