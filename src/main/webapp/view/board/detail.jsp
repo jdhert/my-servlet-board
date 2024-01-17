@@ -43,9 +43,9 @@
                 <div class="d-flex flex-row-reverse mb-3 mr-3">
                     &nbsp
                     &nbsp
-                    <a href="/board/delete?id=${board.getId()}" class="btn btn-secondary btn-sm" onclick="return confirm('삭제하시겠습니까?')"><small>삭제하기</small></a>
+                    <a href="/board/delete?id=${board.getId()}" class="btn btn-secondary btn-sm" onclick="return confirm('삭제하시겠습니까?')" ${param.ide == board.getMember_id() ? "" : "hidden"}><small>삭제하기</small></a>
                     &nbsp
-                    <a href="/board/updateForm?id=${board.getId()}" class="btn btn-secondary btn-sm"><small>수정하기</small></a>
+                    <a href="/board/updateForm?id=${board.getId()}&id2=${param.id2}&ide=${param.ide}&author=${param.author}" class="btn btn-secondary btn-sm" ${param.ide == board.getMember_id() ? "" : "hidden"}><small>수정하기</small></a>
                     &nbsp
                     <a href="/board/list" class="btn btn-secondary btn-sm"><small>목록으로</small></a>
                     &nbsp

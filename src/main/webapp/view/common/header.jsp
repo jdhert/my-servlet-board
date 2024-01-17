@@ -1,11 +1,12 @@
-<%--
+<%@ page import="java.util.Objects" %><%--
   Created by IntelliJ IDEA.
   User: kitri
   Date: 2024-01-09
   Time: 오후 4:25
   To change this template use File | Settings | File Templates.
 --%>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+
+<%@ page contentType="text/html; charset=UTF-8" language="java" %>
 <html>
 <head>
     <title>Title</title>
@@ -15,14 +16,14 @@
     <a class="logo" href="/board/list"><span class="pb-5 material-symbols-outlined">
     location_city
     </span></a>
-    <nav>
-        <ul class="nav-items">
-            <li><a href="/board/list">게시글목록</a></li>
-            <li><a href="/view/member/join.jsp">회원가입</a></li>
-            <li><a href="/view/member/registration.jsp">회원정보수정</a></li>
-            <li><a href="/view/member/login.jsp">로그인</a></li>
-        </ul>
-    </nav>
+        <nav>
+            <ul class="nav-items">
+                <li><a href="/board/list">게시글목록</a></li>
+                <li><a href="/view/member/join.jsp">회원가입</a></li>
+                <li><a href="/view/member/registration.jsp">회원정보수정</a></li>
+                <li><a href=${param.id2 == "null" || param.id2 == null ? "/view/member/login.jsp" : "/login/Logout"}>${param.id2 == "null" || param.id2 == null ? "로그인" : "로그아웃"}</a></li>
+            </ul>
+        </nav>
         <form class="form-inline my-2 my-lg-0 ml-auto pr-5" action="/board/list" method="get">
             <input name="page"type="text" value="1" hidden>
             <select name="term">

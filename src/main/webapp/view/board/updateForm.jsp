@@ -50,6 +50,7 @@
                     <input type="text" name="id" value="${board.getId()}" hidden>
                     <input type="number" name="viewC" value="${board.getViewCount()}" hidden>
                     <input type="number" name="commenC" value="${board.getCommentCount()}" hidden>
+                    <input type="number" name="member_id" value="${param.ide}" hidden>
                     <div class="mb-3">
                         <label for="content" class="form-label">내용</label>
                         <textarea name="content" id="content" class="form-control" cols="30" rows="5" placeholder="내용을 입력해주세요">${board.getContent()}</textarea>

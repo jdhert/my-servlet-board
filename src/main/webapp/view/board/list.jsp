@@ -3,6 +3,7 @@
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="com.kitri.myservletboard.data.Pagination" %>
 <%@ page import="java.util.Objects" %>
+<%@ page import="com.kitri.myservletboard.data.Member" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%
   ArrayList<Board> boards = (ArrayList<Board>) request.getAttribute("boards");
@@ -18,6 +19,12 @@
   searchParam = "&term=" + pagination.getTerm() +"&type=" + pagination.getType() + "&keyword=" + pagination.getKeyword() +
           "&orderBy=" + pagination.getOrderBy() + "&maxRecordsPerPage="+ pagination.getRecordsPerPage();
 //  }
+  String id2 = (String) session.getAttribute("id");
+  Member mem = (Member) session.getAttribute("mem");
+  String parama = "";
+  if(mem != null){
+    parama = "&ide="+ mem.getId() + "&author=" + mem.getName();
+  }
 %>
 <!DOCTYPE html>
 <html lang="en">
@@ -32,6 +39,7 @@
     <jsp:param name="type" value="<%=pagination.getType()%>"/>
     <jsp:param name="term" value="<%=pagination.getTerm()%>"/>
     <jsp:param name="keyword" value="<%=pagination.getKeyword()%>"/>
+    <jsp:param name="id2" value="<%=id2%>"/>
   </jsp:include>
 
   <div>
@@ -75,7 +83,7 @@
         <% for(int i=0; i <= boards.size()-1; i++){%>
           <tr>
             <th scope="row"><%=(pagination.getCurrentPage()-1) * pagination.getRecordsPerPage() + i + 1 %></th>
-            <td><a href="/board/detail?id=<%=boards.get(i).getId()%>" style="color: black; text-decoration: none">
+            <td><a href="/board/detail?id=<%=boards.get(i).getId()%>&id2=<%=id2%><%=parama%>" style="color: black; text-decoration: none">
               <%=boards.get(i).getTitle()%></a></td>
             <td><%=boards.get(i).getWriter()%></td>
             <td><%=boards.get(i).getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD:HH:mm:ss"))%></td>
@@ -86,7 +94,7 @@
         </tbody>
       </table>
       <div>
-        <a href="/board/createForm" role="button" class="btn btn-outline-dark">글쓰기</a>
+        <a href="/board/createForm?id2=<%=id2%><%=parama%>" role="button" class="btn btn-outline-dark" <%=id2 == null ? "hidden" : ""%>>글쓰기</a>
       </div>
 
       <div class="d-flex justify-content-center">
