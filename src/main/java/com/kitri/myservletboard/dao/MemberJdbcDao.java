@@ -68,7 +68,7 @@ public class MemberJdbcDao implements MemberDao{
         PreparedStatement ps = null;
         try {
             connection = connectDB();
-            String sql = "INSERT INTO member (login_id, password, name, email )values (?,?,?,?)";
+            String sql = "INSERT INTO member (login_id, password, name, email) values (?,?,?,?)";
             ps = connection.prepareStatement(sql);
             ps.setString(1,member.getLogin_id());
             ps.setString(2,member.getPassword());
@@ -134,7 +134,7 @@ public class MemberJdbcDao implements MemberDao{
                 String name = rs.getString("name");
                 String email = rs.getString("email");
 
-                info = new Member(id2,login_id,password, name, email);
+                info = new Member(id2, login_id,password, name, email);
             }
         } catch (Exception e){
 

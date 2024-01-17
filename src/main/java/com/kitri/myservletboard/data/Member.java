@@ -52,7 +52,7 @@ public class Member {
     public Member() {
     }
 
-    public Member(Long id,String login_id, String password, String name, String email) {
+    public Member(Long id, String login_id, String password, String name, String email) {
         this.id = id;
         this.login_id = login_id;
         this.password = password;

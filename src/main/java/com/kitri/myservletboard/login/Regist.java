@@ -18,6 +18,8 @@ public class Regist extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        req.setCharacterEncoding("UTF-8");
+        MemberJdbcDao memberJdbcDao= MemberJdbcDao.getInstance();
         RequestDispatcher dispatcher;
 
         String name = req.getParameter("name");
@@ -27,7 +29,7 @@ public class Regist extends HttpServlet {
 
         boolean isRegistFailed;
 
-        ArrayList<String> userIds  = MemberJdbcDao.getInstance().getUserIds();
+        ArrayList<String> userIds  = memberJdbcDao.getUserIds();
         for(int i=0; i <= userIds.size()-1; i++){
             if(userIds.get(i).equals(id)){
                 isRegistFailed = true;
@@ -37,7 +39,7 @@ public class Regist extends HttpServlet {
                 break;
             }
         }
-        MemberJdbcDao.getInstance().regist(new Member(null,id,pw,name,email));
+        memberJdbcDao.regist(new Member(1L,id,pw,name,email));
 
 
         dispatcher = req.getRequestDispatcher("/board/list");
